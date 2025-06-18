@@ -12,12 +12,12 @@ file, instead of editing every html page when you want to change a link
 document.querySelector("#header").innerHTML = `
 <h1>YOUR WEBSITE TITLE</h1>
 <div id="navLinks">
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="https://www.google.com/">Store</a>
+<a href="index">Home</a>
+<a href="about">About</a>
+<a href="https://www.google.com/">Google</a>
 <a href="https://www.patreon.com/">Patreon</a>
 </div>
 `;
 
 // Footer
-document.querySelector("#footer").innerHTML = `Your Name &#169; Year`; // &#169; is the C copyright symbol
+document.querySelector("#footer").innerHTML = `GXBTX &#169; 2025`; // &#169; is the C copyright symbol
