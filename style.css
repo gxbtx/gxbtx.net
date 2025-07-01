@@ -51,7 +51,7 @@ html {
 }
 
 #navLinks a:hover {
-  color: white;
+  color: #ff2121;
   /* You can also do other things here, like make it bigger if you want:*/
   transform: scale(120%);
 }
