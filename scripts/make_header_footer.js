@@ -14,8 +14,7 @@ document.querySelector("#header").innerHTML = `
 <div id="navLinks">
 <a href="https://www.gxbtx.net/">Home</a>
 <a href="about">About</a>
-<a href="https://www.google.com/">Google</a>
-<a href="https://www.patreon.com/">Patreon</a>
+<a href="Galleries">Galleries</a>
 </div>
 `;
 
