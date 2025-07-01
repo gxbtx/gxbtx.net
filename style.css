@@ -20,7 +20,7 @@ html {
 #header {
   /* Color and spacing */
   background-color: #121211;
-  color: white;
+  color: #121211;
   padding: 20px;
   /* Code below creates the sticky header, if you don't like that then delete this */
   position: sticky;
