@@ -11,6 +11,7 @@ html {
   margin: 0;
   padding: 0;
   font-family: "Lexend", sans-serif; /* change the main font of the site here*/
+  color: #fafefa;
   background-color: #121211;
 }
 
@@ -22,7 +23,7 @@ html {
 #header {
   /* Color and spacing */
   background-color: #121211;
-  color: white;
+  color: #fafefa;
   padding: 20px;
   /* Code below creates the sticky header, if you don't like that then delete this */
   position: sticky;
