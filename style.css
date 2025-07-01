@@ -46,6 +46,7 @@ html {
 /* to change the style of the navigation links, edit this:*/
 #navLinks a {
   color: #e0dedd;
+  text-decoration: none;
   /* transition makes it so the link doesn't instantly change on hover. you can remove
   this or play with the timing. This is especially useful if you're changing the size or
   saturation of elements */
@@ -54,6 +55,7 @@ html {
 
 #navLinks a:hover {
   color: #ff2121;
+  text-decoration: none;
   /* You can also do other things here, like make it bigger if you want:*/
   transform: scale(120%);
 }
