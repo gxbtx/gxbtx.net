@@ -19,7 +19,7 @@ html {
 /* General Styling*/
 #header {
   /* Color and spacing */
-  background-color: black;
+  background-color: #121211;
   color: white;
   padding: 20px;
   /* Code below creates the sticky header, if you don't like that then delete this */
@@ -59,7 +59,7 @@ html {
 .main {
   padding: 0em 2em 1em 2em;
   margin: 0 auto; /* centers the main content */
-  background-color: white;
+  background-color: #121211;
 }
 
 hr {
