@@ -20,7 +20,7 @@ html {
 #header {
   /* Color and spacing */
   background-color: #121211;
-  color: #121211;
+  color: white;
   padding: 20px;
   /* Code below creates the sticky header, if you don't like that then delete this */
   position: sticky;
@@ -43,7 +43,7 @@ html {
 
 /* to change the style of the navigation links, edit this:*/
 #navLinks a {
-  color: #bdbdbd;
+  color: #fafefa;
   /* transition makes it so the link doesn't instantly change on hover. you can remove
   this or play with the timing. This is especially useful if you're changing the size or
   saturation of elements */
@@ -52,8 +52,8 @@ html {
 
 #navLinks a:hover {
   color: white;
-  /* You can also do other things here, like make it bigger if you want:
-  transform: scale(120%);*/
+  /* You can also do other things here, like make it bigger if you want:*/
+  transform: scale(120%);
 }
 
 .main {
@@ -69,6 +69,7 @@ hr {
 #footer {
   text-align: center;
   padding: 15px;
+  background-color: #121211;
 }
 
 /* Page specific */
