@@ -30,9 +30,11 @@ html {
   text-align: center;
   margin: auto;
   width: 100%;
+  align-items: center;
 }
 
 #header h1 {
+  align-items: center;
   text-align: center;
   margin: auto;
 }
