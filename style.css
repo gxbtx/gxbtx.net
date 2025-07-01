@@ -43,7 +43,7 @@ html {
 
 /* to change the style of the navigation links, edit this:*/
 #navLinks a {
-  color: #fafefa;
+  color: #e0dedd;
   /* transition makes it so the link doesn't instantly change on hover. you can remove
   this or play with the timing. This is especially useful if you're changing the size or
   saturation of elements */
