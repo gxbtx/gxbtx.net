@@ -25,7 +25,6 @@ html {
   background-color: #121211;
   color: #fafefa;
   padding: 20px;
-  /* Code below creates the sticky header, if you don't like that then delete this */
   position: sticky;
   top: 0;
   text-align: center;
@@ -35,6 +34,7 @@ html {
 
 #header h1 {
   text-align: center;
+  margin: auto;
 }
 
 /* This is only spacing for the navigation links, don't edit unless you want to change that*/
