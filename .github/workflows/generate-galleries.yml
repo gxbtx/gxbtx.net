@@ -42,29 +42,30 @@ jobs:
           # Loop through each folder in the photos directory
           for gallery in $PHOTOS_DIR/*; do
             if [ -d "$gallery" ]; then
-              # Get the gallery name (folder name), replace spaces with underscores, and make it lowercase
-              gallery_name=$(basename "$gallery" | tr '[:space:]' '_' | tr '[:upper:]' '[:lower:]')
+              # Get the gallery name (folder name), replace spaces with underscores, and make it lowercase for the link
+              gallery_name=$(basename "$gallery")
+              gallery_name_link=$(echo "$gallery_name" | tr '[:space:]' '_')  # Replace spaces with underscores for the link
 
               # Find the first image in the gallery (subfolder)
               first_image=$(find "$gallery" -type f -name "*.jpg" -o -name "*.png" | head -n 1)
 
               # Generate HTML for the new gallery page
-              gallery_html="$GALLERIES_DIR/$gallery_name.html"
+              gallery_html="$GALLERIES_DIR/$gallery_name_link.html"
 
               # Proper redirection to avoid ambiguous redirect error and add script tag
               echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | $gallery_name</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'><div class='gallery'>" > "${gallery_html}"
               for image in $(find "$gallery" -type f -name "*.jpg" -o -name "*.png"); do
-                # Properly escape spaces and use underscores and lowercase
-                image_filename=$(basename "$image" | tr '[:space:]' '_' | tr '[:upper:]' '[:lower:]')
+                # Add the image without changing its filename (no space-to-underscore conversion here)
+                image_filename=$(basename "$image")
                 echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
               done
               # Include the script tag at the bottom of each gallery page
               echo "</div><a href='#top'>Back to Top</a></div><script src='/scripts/make_header_footer.js' async defer></script></body></html>" >> "${gallery_html}"
 
-              # Add the gallery to galleries.html
-              echo "<a href='/galleries/$gallery_name.html'>" > temp_gallery
+              # Add the gallery to galleries.html (replace spaces with underscores in the link)
+              echo "<a href='/galleries/$gallery_name_link.html'>" > temp_gallery
               echo "<div class='container'>" >> temp_gallery
-              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$first_image" | tr '[:space:]' '_' | tr '[:upper:]' '[:lower:]')'>" >> temp_gallery
+              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$first_image")'>" >> temp_gallery
               echo "<div class='centered'>$gallery_name</div>" >> temp_gallery
               echo "</div></a>" >> temp_gallery
               cat temp_gallery >> $GALLERIES_HTML
