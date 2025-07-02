@@ -37,7 +37,7 @@ jobs:
           mkdir -p $GALLERIES_DIR
 
           # Start the galleries.html content
-          echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | Galleries</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'>" > $GALLERIES_HTML
+          echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | Galleries</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'><div class='gallery'>" > $GALLERIES_HTML
 
           # Loop through each folder in the photos directory
           for gallery in $PHOTOS_DIR/*; do
@@ -69,7 +69,7 @@ jobs:
           done
 
           # Close galleries.html
-          echo "</div><div id='footer'></div><script src='/scripts/make_header_footer.js' async defer></script></body></html>" >> $GALLERIES_HTML
+          echo "</div></div><div id='footer'></div><script src='/scripts/make_header_footer.js' async defer></script></body></html>" >> $GALLERIES_HTML
 
           # Clean up
           rm temp_gallery
