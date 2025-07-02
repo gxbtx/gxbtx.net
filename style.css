@@ -110,10 +110,11 @@ figure {
 .container {
   position: relative;
   text-align: center;
-  color: black;
-  -webkit-text-fill-color: white; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 5px;
-  -webkit-text-stroke-color: black;
+  text-shadow:
+   -3px -3px 0 #000,  
+    3px -3px 0 #000,
+    -3px 3px 0 #000,
+     3px 3px 0 #000;
 }
 
 .centered {
