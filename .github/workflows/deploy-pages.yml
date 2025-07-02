@@ -26,11 +26,27 @@ jobs:
           # Clean the old files before copying new ones
           rm -rf ./*
 
-          # Copy over the generated gallery HTML files and other assets (like images, CSS, etc.)
-          cp -r galleries/* ./  # Assuming galleries is the folder containing generated HTML
-          cp -r photos ./  # If you have photos to copy
-          cp -r style.css ./  # If you have a CSS file to copy
-          cp -r scripts ./  # If you have JS scripts to copy (optional)
+          # Explicitly check the galleries folder exists at root and copy its contents
+          if [ -d "./galleries" ]; then
+            cp -r ./galleries/* ./  # Ensure we use the relative path to the root of the repo
+          else
+            echo "No galleries directory found."
+          fi
+
+          # Check and copy photos if available
+          if [ -d "./photos" ]; then
+            cp -r ./photos ./  # Copy photos to root if they exist
+          fi
+
+          # Check and copy style.css if it exists
+          if [ -f "./style.css" ]; then
+            cp ./style.css ./  # Copy CSS file to root if it exists
+          fi
+
+          # Check and copy scripts if available
+          if [ -d "./scripts" ]; then
+            cp -r ./scripts ./  # Copy scripts if they exist
+          fi
           
           # Commit the changes (if any)
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -38,7 +54,7 @@ jobs:
 
           git add .
 
-          # Commit the changes only if there are any updates
+          # Commit only if there are changes
           git diff-index --quiet HEAD || git commit -m "Deploy generated galleries"
 
           # Push the changes to the main branch
@@ -46,6 +62,6 @@ jobs:
 
       - name: Clean up (optional)
         run: |
-          # Clean up after deployment (optional, based on your project setup)
+          # Clean up after deployment (optional)
           rm -rf galleries/*
           rm -rf photos/*
