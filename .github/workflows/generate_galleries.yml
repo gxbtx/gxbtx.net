@@ -48,7 +48,7 @@ jobs:
               gallery_name_link=$(echo "$gallery_name_link" | sed 's/_$//')  # Remove any trailing underscore
 
               # Find all unique image files in the gallery folder (no duplicates)
-              images=$(find "$gallery" -type f -name "*.jpg" -o -name "*.png" | sort | uniq)
+              images=$(find "$gallery" -type f \( -iname "*.jpg" -o -iname "*.png" \) | sort | uniq)
 
               # Check for a .txt file in the gallery folder
               txt_file=$(find "$gallery" -type f -name "*.txt" | head -n 1)
@@ -78,7 +78,7 @@ jobs:
               for image in $images; do
                 image_filename=$(basename "$image")
                 
-                # Add the image without changing its filename (no space-to-underscore conversion here)
+                # Add the image tag to the gallery HTML page
                 echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
               done
 
