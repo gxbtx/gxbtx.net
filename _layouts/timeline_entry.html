@@ -1,4 +1,4 @@
-<div class="container {{ page.date | date: '%Y' | modulo: 2 == 0 ? 'left' : 'right' }}">
+<div class="container {% if page.date | date: '%Y' | modulo: 2 == 0 %}left{% else %}right{% endif %}">
   <div class="content">
     <h2>{{ page.date }}</h2>
     <p>{{ content }}</p>
