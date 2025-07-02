@@ -15,17 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js (if needed, based on your project)
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies (if necessary)
-        run: npm install  # Optional, if you need to install dependencies for building the page
-
-      - name: Build the site (if needed)
-        run: npm run build  # Skip this step if you don't need to build anything
-
       - name: Prepare Deployment for GitHub Pages
         run: |
           # Ensure we are working on the main branch
@@ -38,10 +27,10 @@ jobs:
           rm -rf ./*
 
           # Copy over the generated gallery HTML files and other assets (like images, CSS, etc.)
-          cp -r galleries/* ./
-          cp -r photos ./  # Assuming photos need to be copied as well
-          cp -r style.css ./  # Ensure the CSS is included if needed
-          cp -r scripts ./  # Include JS scripts if applicable
+          cp -r galleries/* ./  # Assuming galleries is the folder containing generated HTML
+          cp -r photos ./  # If you have photos to copy
+          cp -r style.css ./  # If you have a CSS file to copy
+          cp -r scripts ./  # If you have JS scripts to copy (optional)
           
           # Commit the changes (if any)
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
