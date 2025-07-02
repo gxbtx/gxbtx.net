@@ -31,11 +31,7 @@ html {
   margin: auto;
   width: 100%;
   align-items: center;
-}
-
-#headerImg {
-  height:50%;
-  width:auto;
+  img{height:50%; width:auto; vertical-align: top;}
 }
 
 /* This is only spacing for the navigation links, don't edit unless you want to change that*/
