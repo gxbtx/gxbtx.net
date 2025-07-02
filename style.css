@@ -176,7 +176,8 @@ figure {
 }
 
 /* Container around content */
-.container {
+.timelineContainer {
+  text-align: center;
   padding: 10px 40px;
   position: relative;
   background-color: inherit;
@@ -184,7 +185,7 @@ figure {
 }
 
 /* The circles on the timeline */
-.container::after {
+.timelineContainer::after {
   content: '';
   position: absolute;
   width: 25px;
