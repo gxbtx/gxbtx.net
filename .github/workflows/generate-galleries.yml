@@ -76,8 +76,10 @@ jobs:
           
       - name: Commit and push changes
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # Use the GITHUB_TOKEN for authentication to push changes
           git add .
           git commit -m "Auto-generated gallery pages"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
