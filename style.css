@@ -91,7 +91,8 @@ a:visited {
 a:hover {
   color: #ff2121;
   background-color: transparent;
-  text-decoration: bold;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 a:active {
