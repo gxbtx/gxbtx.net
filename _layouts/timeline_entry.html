@@ -7,3 +7,12 @@
     <p>{{ page.content }}</p>
   </div>
 </div>
+
+<div class="timeline-entry">
+  <h2>{{ page.date }}</h2>
+  <p>{{ page.content }}</p>
+
+  <!-- Debugging -->
+  <p><strong>Layout applied:</strong> {{ page.layout }}</p>
+  <p><strong>Content:</strong> {{ page.content | escape }}</p>
+</div>
