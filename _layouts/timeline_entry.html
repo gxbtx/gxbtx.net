@@ -1,5 +1,7 @@
 {% assign year = page.date | date: "%Y" %}
-<div class="container {% if year | modulo: 2 == 0 %}left{% else %}right{% endif %}">
+{% assign is_even = year | modulo: 2 %}
+
+<div class="container {% if is_even == 0 %}left{% else %}right{% endif %}">
   <div class="content">
     <h2>{{ page.date | date: "%B %d, %Y" }}</h2>
     <p>{{ page.content }}</p>
