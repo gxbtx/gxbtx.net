@@ -13,8 +13,8 @@ document.querySelector("#header").innerHTML = `
 <img src="/images/logo.png"/>
 <div id="navLinks">
 <a href="https://www.gxbtx.net/">Home</a>
-<a href="about">About</a>
-<a href="galleries">Galleries</a>
+<a href="/about">About</a>
+<a href="/galleries">Galleries</a>
 </div>
 `;
 
