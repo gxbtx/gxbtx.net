@@ -17,11 +17,12 @@
           <div class="container {% if forloop.index0 % 2 == 0 %}left{% else %}right{% endif %}">
             <div class="content">
               <h2>{{ entry.date }}</h2>
-              <p>{{ entry.content }}</p>
+              <p>{{ entry.content | markdownify }}</p> <!-- Render markdown content -->
             </div>
           </div>
         {% endfor %}
       </div>
+
 
       <a href="#top">Back to Top</a>
     </div>
