@@ -297,3 +297,9 @@ figure {
     columns: auto 1;
   }
 }
+
+@media screen and (max-width:767px) {
+	iframe[src*="youtube"] {
+		width: 50% !important;
+}
+}
