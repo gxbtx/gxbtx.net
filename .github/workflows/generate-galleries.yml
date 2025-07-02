@@ -76,10 +76,20 @@ jobs:
           
       - name: Commit and push changes
         run: |
+          # Configure Git user for the commit
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-          # Use the GITHUB_TOKEN for authentication to push changes
+          # Checkout the current branch to ensure we're working on it
+          git checkout $GITHUB_REF
+
+          # Add all changes (including new gallery HTML files)
           git add .
-          git commit -m "Auto-generated gallery pages"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
+
+          # Commit only if there are changes
+          git diff-index --quiet HEAD || git commit -m "Auto-generated gallery pages"
+
+          # Push the changes back to the current branch
+          git push origin $GITHUB_REF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
