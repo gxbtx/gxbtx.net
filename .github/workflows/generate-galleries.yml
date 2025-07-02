@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies (e.g., Node.js, Python, etc.)
+      - name: Install dependencies (e.g., Python, etc.)
         run: |
           sudo apt-get update
           sudo apt-get install -y python3
@@ -24,11 +24,15 @@ jobs:
           # Navigate to the root of your project
           cd $GITHUB_WORKSPACE
 
-          # Prepare folders
+          # Prepare folder variables
           PHOTOS_DIR="./photos"
           GALLERIES_DIR="./galleries"
           GALLERIES_HTML="./galleries.html"
 
+          # Ensure galleries folder exists and clean up old HTML files
+          echo "Cleaning up old gallery HTML files..."
+          rm -f $GALLERIES_DIR/*.html
+          
           # Ensure galleries folder exists
           mkdir -p $GALLERIES_DIR
 
@@ -46,11 +50,13 @@ jobs:
 
               # Generate HTML for the new gallery page
               gallery_html="$GALLERIES_DIR/$gallery_name.html"
-              echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | $gallery_name</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'><div class='gallery'>" > $gallery_html
+
+              # Proper redirection to avoid ambiguous redirect error
+              echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | $gallery_name</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'><div class='gallery'>" > "${gallery_html}"
               for image in $(find "$gallery" -type f -name "*.jpg" -o -name "*.png"); do
-                echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$image")'>" >> $gallery_html
+                echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$image")'>" >> "${gallery_html}"
               done
-              echo "</div><a href='#top'>Back to Top</a></div></body></html>" >> $gallery_html
+              echo "</div><a href='#top'>Back to Top</a></div></body></html>" >> "${gallery_html}"
 
               # Add the gallery to galleries.html
               echo "<a href='/galleries/$gallery_name.html'>" > temp_gallery
@@ -67,7 +73,7 @@ jobs:
 
           # Clean up
           rm temp_gallery
-
+          
       - name: Commit and push changes
         run: |
           git config --global user.email "you@example.com"
