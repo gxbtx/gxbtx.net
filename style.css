@@ -31,7 +31,7 @@ html {
   margin: auto;
   width: 100%;
   align-items: center;
-  img{height:50%; width:auto; vertical-align: top;}
+  img{height:auto; width:20%; vertical-align: top;}
 }
 
 /* This is only spacing for the navigation links, don't edit unless you want to change that*/
