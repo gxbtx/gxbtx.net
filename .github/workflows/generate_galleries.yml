@@ -48,6 +48,7 @@ jobs:
               gallery_name_link=$(echo "$gallery_name_link" | sed 's/_$//')  # Remove any trailing underscore
 
               # Find all unique image files in the gallery folder (no duplicates)
+              # Exclude directories and only find .jpg and .png files
               images=$(find "$gallery" -type f \( -iname "*.jpg" -o -iname "*.png" \) | sort | uniq)
 
               # Check for a .txt file in the gallery folder
@@ -78,7 +79,7 @@ jobs:
               for image in $images; do
                 image_filename=$(basename "$image")
                 
-                # Add the image tag to the gallery HTML page
+                # Add the image tag to the gallery HTML page (exclude any directory names)
                 echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
               done
 
