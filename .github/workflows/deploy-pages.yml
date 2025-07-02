@@ -1,4 +1,4 @@
-name: Deploy Pages to GitHub
+name: Build and Deploy Pages to GitHub
 
 on:
   workflow_run:
@@ -10,7 +10,7 @@ permissions:
   contents: write  # Allow writing to the repository (important for deploying)
 
 jobs:
-  deploy:
+  build-and-deploy:
     concurrency: ci-${{ github.ref }}  # Prevents deployment overlap
 
     runs-on: ubuntu-latest
@@ -20,31 +20,46 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # List files in the repository for debugging purposes
-      - name: List files in the repo (Debugging)
+      # Build the page (example for npm-based project)
+      - name: Install dependencies and Build the site
         run: |
-          ls -la
+          npm ci        # Install dependencies (if you're using npm)
+          npm run build # Replace with your build command, like `jekyll build` or similar
 
-      # Check if there are changes before attempting to commit
-      - name: Check for changes
-        id: check_changes
+      # Check if the build was successful and set build status
+      - name: Report build status
+        id: build_status
         run: |
-          git diff --exit-code || echo "Changes detected"
+          if [ $? -eq 0 ]; then
+            echo "Build successful"
+            echo "build_status=success" >> $GITHUB_ENV
+          else
+            echo "Build failed"
+            echo "build_status=failed" >> $GITHUB_ENV
+            exit 1
+          fi
 
-      # Commit changes if necessary
-      - name: Commit changes
-        if: steps.check_changes.outputs.stdout == 'Changes detected'
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Deploy new content to GitHub Pages"
-          git push
-
-      # Deploy to GitHub Pages (on the 'main' branch)
+      # Deploy to GitHub Pages (main branch)
       - name: Deploy to GitHub Pages
+        if: env.build_status == 'success'  # Only deploy if build is successful
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: .  # Deploy the root directory
-          branch: main  # Deploy to the 'main' branch
+          folder: ./build  # Specify your build folder (adjust if necessary)
+          branch: main     # Deploy to the main branch
+          cname: ${{ secrets.CNAME }}  # Add your CNAME file for custom domain
 
+      # Optional: Push CNAME file manually (if required)
+      - name: Add CNAME file
+        if: env.build_status == 'success'
+        run: |
+          echo 'yourcustomdomain.com' > ./build/CNAME  # Replace with your custom domain
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./build/CNAME
+          git commit -m "Add CNAME file for custom domain"
+          git push origin main
+
+      # Optionally, add a status check step (e.g., using GitHub's `set-output`)
+      - name: Set status output
+        run: |
+          echo "::set-output name=deployment-status::${{ env.build_status }}"
