@@ -1,8 +1,4 @@
 <div class="timeline-entry">
   <h2>{{ page.date | date: "%B %d, %Y" }}</h2>
-  <p>{{ page.content | markdownify }}</p> <!-- Render markdown content -->
-
-  <!-- Debugging: Check if the layout is applied and the content -->
-  <p><strong>Layout applied:</strong> {{ page.layout }}</p>
-  <p><strong>Content:</strong> {{ page.content | escape }}</p>
+  <p>{{ page.content | markdownify }}</p>
 </div>
