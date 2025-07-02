@@ -46,26 +46,30 @@ jobs:
               gallery_name=$(basename "$gallery")
               gallery_name_link=$(echo "$gallery_name" | tr '[:space:]' '_')  # Replace spaces with underscores for the link
 
-              # Find the first image in the gallery (subfolder)
-              first_image=$(find "$gallery" -type f -name "*.jpg" -o -name "*.png" | head -n 1)
+              # Find all unique image files in the gallery folder (no duplicates)
+              images=$(find "$gallery" -type f -name "*.jpg" -o -name "*.png" | sort | uniq)
 
               # Generate HTML for the new gallery page
               gallery_html="$GALLERIES_DIR/$gallery_name_link.html"
-
+              
               # Proper redirection to avoid ambiguous redirect error and add script tag
               echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | $gallery_name</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'><div class='gallery'>" > "${gallery_html}"
-              for image in $(find "$gallery" -type f -name "*.jpg" -o -name "*.png"); do
-                # Add the image without changing its filename (no space-to-underscore conversion here)
+
+              # Loop through unique image files only
+              for image in $images; do
                 image_filename=$(basename "$image")
+                
+                # Add the image without changing its filename (no space-to-underscore conversion here)
                 echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
               done
+
               # Include the script tag at the bottom of each gallery page
               echo "</div><a href='#top'>Back to Top</a></div><script src='/scripts/make_header_footer.js' async defer></script></body></html>" >> "${gallery_html}"
 
               # Add the gallery to galleries.html (replace spaces with underscores in the link)
               echo "<a href='/galleries/$gallery_name_link.html'>" > temp_gallery
               echo "<div class='container'>" >> temp_gallery
-              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$first_image")'>" >> temp_gallery
+              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$images" | head -n 1)'>" >> temp_gallery
               echo "<div class='centered'>$gallery_name</div>" >> temp_gallery
               echo "</div></a>" >> temp_gallery
               cat temp_gallery >> $GALLERIES_HTML
