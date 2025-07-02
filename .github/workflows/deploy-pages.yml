@@ -1,65 +1,61 @@
-name: Build and Deploy Pages to GitHub
+name: Deploy to GitHub Pages
 
 on:
   workflow_run:
-    workflows: ["Generate Galleries"]  # Wait for the "Generate Galleries" workflow to complete
+    workflows: ["Generate Galleries"]
     types:
       - completed
 
-permissions:
-  contents: write  # Allow writing to the repository (important for deploying)
-
 jobs:
-  build-and-deploy:
-    concurrency: ci-${{ github.ref }}  # Prevents deployment overlap
-
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository to ensure you're on the correct branch
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      # Build the page (example for npm-based project)
-      - name: Install dependencies and Build the site
-        run: |
-          npm ci        # Install dependencies (if you're using npm)
-          npm run build # Replace with your build command, like `jekyll build` or similar
-
-      # Check if the build was successful and set build status
-      - name: Report build status
-        id: build_status
-        run: |
-          if [ $? -eq 0 ]; then
-            echo "Build successful"
-            echo "build_status=success" >> $GITHUB_ENV
-          else
-            echo "Build failed"
-            echo "build_status=failed" >> $GITHUB_ENV
-            exit 1
-          fi
-
-      # Deploy to GitHub Pages (main branch)
-      - name: Deploy to GitHub Pages
-        if: env.build_status == 'success'  # Only deploy if build is successful
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Set up Node.js (if applicable, based on your project)
+        uses: actions/setup-node@v3
         with:
-          folder: ./build  # Specify your build folder (adjust if necessary)
-          branch: main     # Deploy to the main branch
-          cname: ${{ secrets.CNAME }}  # Add your CNAME file for custom domain
+          node-version: '16'
 
-      # Optional: Push CNAME file manually (if required)
-      - name: Add CNAME file
-        if: env.build_status == 'success'
+      - name: Install dependencies (if necessary)
+        run: npm install  # Optional, if you need to install dependencies for building the page
+
+      - name: Build the site (if needed)
+        run: npm run build  # Skip this step if you don't need to build anything
+
+      - name: Prepare GitHub Pages Deployment
         run: |
-          echo 'yourcustomdomain.com' > ./build/CNAME  # Replace with your custom domain
-          git config --global user.name "GitHub Actions"
+          # Ensure we have the latest gh-pages branch
+          git fetch origin
+
+          # Create gh-pages branch if it doesn't exist yet
+          git checkout --orphan gh-pages || git checkout gh-pages
+
+          # Clean the gh-pages branch (remove all files before deploying)
+          rm -rf ./*
+
+          # Copy over the generated gallery HTML files and assets (if any)
+          cp -r galleries/* ./
+          cp -r photos ./  # Assuming photos folder needs to be copied as well
+
+          # Commit the changes
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./build/CNAME
-          git commit -m "Add CNAME file for custom domain"
-          git push origin main
+          git config --global user.name "github-actions[bot]"
 
-      # Optionally, add a status check step (e.g., using GitHub's `set-output`)
-      - name: Set status output
+          # Add all changes (files generated from galleries)
+          git add .
+
+          # Commit the changes (if there are any)
+          git diff-index --quiet HEAD || git commit -m "Deploy generated galleries"
+
+          # Force push to the gh-pages branch
+          git push --force origin gh-pages
+
+      - name: Clean up
         run: |
-          echo "::set-output name=deployment-status::${{ env.build_status }}"
+          # Optionally clean up after deployment
+          rm -rf galleries/*
+          rm -rf photos/*
