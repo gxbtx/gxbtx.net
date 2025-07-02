@@ -79,25 +79,25 @@ hr {
 a:link {
   color: #fafefa;
   background-color: transparent;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 a:visited {
   color: #e0dedd;
   background-color: transparent;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 a:hover {
   color: #ff2121;
   background-color: transparent;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:active {
   color: red;
   background-color: transparent;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 /* Page specific */
