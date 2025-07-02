@@ -95,14 +95,13 @@ jobs:
               echo "<a href='/galleries/$gallery_name_link.html'>" > temp_gallery
               echo "<div class='container'>" >> temp_gallery
 
-              # Correct the logic: Loop through images and add a preview image (first image in gallery)
+              # Corrected part: Use the first image in the gallery
               first_image=$(echo "$images" | head -n 1)  # Get the first image from the list
               echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$first_image")'>" >> temp_gallery
 
               echo "<div class='centered'>$gallery_name</div>" >> temp_gallery
               echo "</div></a>" >> temp_gallery
               cat temp_gallery >> $GALLERIES_HTML
-
             fi
           done
 
