@@ -80,8 +80,11 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-          # Checkout the current branch to ensure we're working on it
-          git checkout $GITHUB_REF
+          # Checkout the main branch (if not on it already)
+          git checkout main
+
+          # Make sure the repository is up to date with remote
+          git pull origin main
 
           # Add all changes (including new gallery HTML files)
           git add .
@@ -89,7 +92,7 @@ jobs:
           # Commit only if there are changes
           git diff-index --quiet HEAD || git commit -m "Auto-generated gallery pages"
 
-          # Push the changes back to the current branch
-          git push origin $GITHUB_REF
+          # Push the changes back to the main branch
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
