@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js (if applicable, based on your project)
+      - name: Set up Node.js (if needed, based on your project)
         uses: actions/setup-node@v3
         with:
           node-version: '16'
@@ -26,36 +26,37 @@ jobs:
       - name: Build the site (if needed)
         run: npm run build  # Skip this step if you don't need to build anything
 
-      - name: Prepare GitHub Pages Deployment
+      - name: Prepare Deployment for GitHub Pages
         run: |
-          # Ensure we have the latest gh-pages branch
-          git fetch origin
+          # Ensure we are working on the main branch
+          git checkout main
 
-          # Create gh-pages branch if it doesn't exist yet
-          git checkout --orphan gh-pages || git checkout gh-pages
+          # Make sure the repository is up to date with the remote
+          git pull origin main
 
-          # Clean the gh-pages branch (remove all files before deploying)
+          # Clean the old files before copying new ones
           rm -rf ./*
 
-          # Copy over the generated gallery HTML files and assets (if any)
+          # Copy over the generated gallery HTML files and other assets (like images, CSS, etc.)
           cp -r galleries/* ./
-          cp -r photos ./  # Assuming photos folder needs to be copied as well
-
-          # Commit the changes
+          cp -r photos ./  # Assuming photos need to be copied as well
+          cp -r style.css ./  # Ensure the CSS is included if needed
+          cp -r scripts ./  # Include JS scripts if applicable
+          
+          # Commit the changes (if any)
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-          # Add all changes (files generated from galleries)
           git add .
 
-          # Commit the changes (if there are any)
+          # Commit the changes only if there are any updates
           git diff-index --quiet HEAD || git commit -m "Deploy generated galleries"
 
-          # Force push to the gh-pages branch
-          git push --force origin gh-pages
+          # Push the changes to the main branch
+          git push origin main
 
-      - name: Clean up
+      - name: Clean up (optional)
         run: |
-          # Optionally clean up after deployment
+          # Clean up after deployment (optional, based on your project setup)
           rm -rf galleries/*
           rm -rf photos/*
