@@ -42,9 +42,10 @@ jobs:
           # Loop through each folder in the photos directory
           for gallery in $PHOTOS_DIR/*; do
             if [ -d "$gallery" ]; then
-              # Get the gallery name (folder name), replace spaces with underscores, and make it lowercase for the link
+              # Get the gallery name (folder name), replace spaces with underscores, and ensure no trailing underscore
               gallery_name=$(basename "$gallery")
-              gallery_name_link=$(echo "$gallery_name" | tr -s '[:space:]' '_')  # Replace spaces with underscores only if necessary
+              gallery_name_link=$(echo "$gallery_name" | tr '[:space:]' '_')  # Replace spaces with underscores
+              gallery_name_link=$(echo "$gallery_name_link" | sed 's/_$//')  # Remove any trailing underscore
 
               # Find all unique image files in the gallery folder (no duplicates)
               images=$(find "$gallery" -type f -name "*.jpg" -o -name "*.png" | sort | uniq)
