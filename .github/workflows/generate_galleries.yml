@@ -76,6 +76,10 @@ jobs:
 
               # Loop through unique image files only
               for image in $images; do
+                # Skip any non-image files or folders (just in case)
+                if [[ ! "$image" =~ \.jpg$ && ! "$image" =~ \.png$ ]]; then
+                  continue
+                fi
                 image_filename=$(basename "$image")
                 
                 # Add the image tag to the gallery HTML page
