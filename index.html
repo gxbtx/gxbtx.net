@@ -11,20 +11,18 @@
   <body id="top">
     <div id="header"></div>
     <div class="main">
+
       <div class="timeline">
-        <div class="container left">
-          <div class="content">
-            <h2>2017</h2>
-            <p>Lorem ipsum..</p>
+        {% for entry in site.timeline %}
+          <div class="container {% if forloop.index0 % 2 == 0 %}left{% else %}right{% endif %}">
+            <div class="content">
+              <h2>{{ entry.date }}</h2>
+              <p>{{ entry.content }}</p>
+            </div>
           </div>
-        </div>
-        <div class="container right">
-          <div class="content">
-            <h2>2016</h2>
-            <p>Lorem ipsum..</p>
-          </div>
-        </div>
+        {% endfor %}
       </div>
+
       <a href="#top">Back to Top</a>
     </div>
 

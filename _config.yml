@@ -1,0 +1,7 @@
+title: "GXBTX"
+baseurl: ""
+url: "https://gxbtx.net"
+
+collections:
+  timeline:
+    output: true
