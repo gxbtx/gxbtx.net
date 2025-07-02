@@ -11,13 +11,15 @@
   <body id="top">
     <div id="header"></div>
     <div class="main">
-
       <div class="timeline">
         {% for entry in site.timeline %}
-          <div class="container">
+          {% assign year = entry.date | date: "%Y" %}
+          {% assign is_even = year | modulo: 2 %}
+
+          <div class="container {% if is_even == 0 %}left{% else %}right{% endif %}">
             <div class="content">
-              <h2>{{ entry.date }}</h2>
-              <p>{{ entry.content }}</p> <!-- No markdownify -->
+              <h2>{{ entry.date | date: "%B %d, %Y" }}</h2>
+              <p>{{ entry.content | markdownify }}</p> <!-- Process markdown content -->
             </div>
           </div>
         {% endfor %}

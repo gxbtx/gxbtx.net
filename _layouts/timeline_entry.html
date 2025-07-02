@@ -1,18 +1,8 @@
-{% assign year = page.date | date: "%Y" %}
-{% assign is_even = year | modulo: 2 %}
-
-<div class="container {% if is_even == 0 %}left{% else %}right{% endif %}">
-  <div class="content">
-    <h2>{{ page.date | date: "%B %d, %Y" }}</h2>
-    <p>{{ page.content }}</p>
-  </div>
-</div>
-
 <div class="timeline-entry">
-  <h2>{{ page.date }}</h2>
-  <p>{{ page.content }}</p>
+  <h2>{{ page.date | date: "%B %d, %Y" }}</h2>
+  <p>{{ page.content | markdownify }}</p> <!-- Render markdown content -->
 
-  <!-- Debugging -->
+  <!-- Debugging: Check if the layout is applied and the content -->
   <p><strong>Layout applied:</strong> {{ page.layout }}</p>
   <p><strong>Content:</strong> {{ page.content | escape }}</p>
 </div>
