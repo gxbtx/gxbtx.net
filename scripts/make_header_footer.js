@@ -10,9 +10,7 @@ file, instead of editing every html page when you want to change a link
 // You can use internal (index.html) links to point to pages you have in this website
 // or external links (like if you have a store or patreon)
 document.querySelector("#header").innerHTML = `
-<div id="headerImg">
 <img src="./images/logo.png"/>
-</div>
 <div id="navLinks">
 <a href="https://www.gxbtx.net/">Home</a>
 <a href="about">About</a>
