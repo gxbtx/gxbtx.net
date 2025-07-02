@@ -25,7 +25,7 @@ html {
   background-color: #121211;
   color: #fafefa;
   padding: 20px;
-  position: sticky;
+  position: fixed;
   top: 0;
   text-align: center;
   margin: auto;
