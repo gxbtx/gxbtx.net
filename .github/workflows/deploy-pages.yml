@@ -2,22 +2,42 @@ name: Deploy Pages to GitHub
 
 on:
   workflow_run:
-    workflows: ["Generate Galleries"]
+    workflows: ["Generate Galleries"]  # Wait for the "Generate Galleries" workflow to complete
     types:
       - completed
 
+permissions:
+  contents: write  # Allow writing to the repository (important for deploying)
+
 jobs:
   deploy:
+    concurrency: ci-${{ github.ref }}  # Prevents deployment overlap
+
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
+      # Checkout the repository to ensure you're on the correct branch
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Deploy directly to GitHub Pages (from the 'main' branch)
+      # List files in the repository for debugging purposes
+      - name: List files in the repo (Debugging)
+        run: |
+          ls -la
+
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        uses: jamesives/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: main    # Specify 'main' branch
-          folder: .       # Deploy the root folder
+          folder: .  # Deploy the root directory
+          branch: gh-pages  # Deploy to the 'gh-pages' branch (or 'main' if you're using that)
+
+      # Optionally, add a commit to ensure new content is pushed
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Deploy new content to GitHub Pages"
+          git push
+

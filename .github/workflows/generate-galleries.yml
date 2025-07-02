@@ -61,7 +61,8 @@ jobs:
               # Add header element explicitly
               echo "<div id='header'></div>" >> "${gallery_html}"
 
-              # Add the gallery description from the .txt file if it exists
+              # Add the gallery description from the .txt file if it exists (outside of gallery div, but inside main div)
+              echo "<div class='main'>" >> "${gallery_html}"
               if [ -f "$txt_file" ]; then
                 # Add the content of the .txt file as a paragraph
                 echo "<p class='gallery-description'>" >> "${gallery_html}"
@@ -70,7 +71,7 @@ jobs:
               fi
 
               # Start the gallery images section
-              echo "<div class='main'><div class='gallery'>" >> "${gallery_html}"
+              echo "<div class='gallery'>" >> "${gallery_html}"
 
               # Loop through unique image files only
               for image in $images; do
@@ -80,8 +81,11 @@ jobs:
                 echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
               done
 
+              # Close the gallery section
+              echo "</div>" >> "${gallery_html}"
+
               # Add footer element explicitly
-              echo "</div><a href='#top'>Back to Top</a></div>" >> "${gallery_html}"
+              echo "<a href='#top'>Back to Top</a></div>" >> "${gallery_html}"
               echo "<div id='footer'></div>" >> "${gallery_html}"
 
               # Add the script tag at the bottom
