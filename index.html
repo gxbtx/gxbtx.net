@@ -14,15 +14,14 @@
 
       <div class="timeline">
         {% for entry in site.timeline %}
-          <div class="container {% if forloop.index0 % 2 == 0 %}left{% else %}right{% endif %}">
+          <div class="container">
             <div class="content">
               <h2>{{ entry.date }}</h2>
-              <p>{{ entry.content | markdownify }}</p> <!-- Render markdown content -->
+              <p>{{ entry.content }}</p> <!-- No markdownify -->
             </div>
           </div>
         {% endfor %}
       </div>
-
 
       <a href="#top">Back to Top</a>
     </div>
