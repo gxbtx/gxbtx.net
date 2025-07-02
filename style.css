@@ -107,6 +107,19 @@ figure {
   margin: 0 auto;
 }
 
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* Below changes the number of columns in the gallery for smaller screens
    If you changed the column number on line 85, you might have to edit it here too
    (it's not exactly mobile and tablet sizing)
