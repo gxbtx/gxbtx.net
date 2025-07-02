@@ -77,10 +77,13 @@ jobs:
 
               # Loop through unique image files only
               for image in $images; do
-                image_filename=$(basename "$image")
+                # Ensure it's an actual image file (skip any directories)
+                if [ -f "$image" ]; then
+                  image_filename=$(basename "$image")
                 
-                # Add the image tag to the gallery HTML page (exclude any directory names)
-                echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
+                  # Add the image tag to the gallery HTML page
+                  echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
+                fi
               done
 
               # Close the gallery section
@@ -97,9 +100,10 @@ jobs:
               echo "<a href='/galleries/$gallery_name_link.html'>" > temp_gallery
               echo "<div class='container'>" >> temp_gallery
 
-              # Corrected part: Use the first image in the gallery
+              # Corrected part: Use the first image in the gallery as the thumbnail
               first_image=$(echo "$images" | head -n 1)  # Get the first image from the list
-              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$first_image")'>" >> temp_gallery
+              first_image_filename=$(basename "$first_image")
+              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$first_image_filename'>" >> temp_gallery
 
               echo "<div class='centered'>$gallery_name</div>" >> temp_gallery
               echo "</div></a>" >> temp_gallery
