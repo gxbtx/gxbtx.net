@@ -1,0 +1,77 @@
+name: Generate Galleries
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-galleries:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies (e.g., Node.js, Python, etc.)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3
+
+      - name: Generate gallery pages and update galleries.html
+        run: |
+          # Navigate to the root of your project
+          cd $GITHUB_WORKSPACE
+
+          # Prepare folders
+          PHOTOS_DIR="./photos"
+          GALLERIES_DIR="./galleries"
+          GALLERIES_HTML="./galleries.html"
+
+          # Ensure galleries folder exists
+          mkdir -p $GALLERIES_DIR
+
+          # Start the galleries.html content
+          echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | Galleries</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'>" > $GALLERIES_HTML
+
+          # Loop through each folder in the photos directory
+          for gallery in $PHOTOS_DIR/*; do
+            if [ -d "$gallery" ]; then
+              # Get the gallery name (folder name)
+              gallery_name=$(basename "$gallery")
+
+              # Find the first image in the gallery (subfolder)
+              first_image=$(find "$gallery" -type f -name "*.jpg" -o -name "*.png" | head -n 1)
+
+              # Generate HTML for the new gallery page
+              gallery_html="$GALLERIES_DIR/$gallery_name.html"
+              echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | $gallery_name</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'><div class='gallery'>" > $gallery_html
+              for image in $(find "$gallery" -type f -name "*.jpg" -o -name "*.png"); do
+                echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$image")'>" >> $gallery_html
+              done
+              echo "</div><a href='#top'>Back to Top</a></div></body></html>" >> $gallery_html
+
+              # Add the gallery to galleries.html
+              echo "<a href='/galleries/$gallery_name.html'>" > temp_gallery
+              echo "<div class='container'>" >> temp_gallery
+              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$first_image")'>" >> temp_gallery
+              echo "<div class='centered'>$gallery_name</div>" >> temp_gallery
+              echo "</div></a>" >> temp_gallery
+              cat temp_gallery >> $GALLERIES_HTML
+            fi
+          done
+
+          # Close galleries.html
+          echo "</div><div id='footer'></div><script src='/scripts/make_header_footer.js' async defer></script></body></html>" >> $GALLERIES_HTML
+
+          # Clean up
+          rm temp_gallery
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add .
+          git commit -m "Auto-generated gallery pages"
+          git push
