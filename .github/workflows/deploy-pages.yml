@@ -17,16 +17,16 @@ jobs:
 
       - name: Prepare Deployment for GitHub Pages
         run: |
-          # Ensure we are working on the main branch
-          git checkout main
+          # Ensure we are working on the gh-pages branch
+          git checkout gh-pages || git checkout --orphan gh-pages  # Create gh-pages if it doesn't exist
 
           # Make sure the repository is up to date with the remote
-          git pull origin main
+          git pull origin gh-pages || echo "No existing gh-pages branch to pull from."
 
           # Clean the old files before copying new ones
           rm -rf ./*
 
-          # Explicitly check the galleries folder exists at root and copy its contents
+          # Check if the 'galleries' directory exists, and copy over files if it does
           if [ -d "./galleries" ]; then
             cp -r ./galleries/* ./  # Ensure we use the relative path to the root of the repo
           else
@@ -47,18 +47,30 @@ jobs:
           if [ -d "./scripts" ]; then
             cp -r ./scripts ./  # Copy scripts if they exist
           fi
-          
+
+          # Debugging step: List the files in the root directory after copying
+          echo "Files in the root directory after copy:"
+          ls -l ./  # List the files in the root directory
+
           # Commit the changes (if any)
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
           git add .
 
+          # Debugging step: Check if there are any changes to commit
+          echo "Changes to commit:"
+          git status  # This will show if any files are staged for commit
+
           # Commit only if there are changes
           git diff-index --quiet HEAD || git commit -m "Deploy generated galleries"
 
-          # Push the changes to the main branch
-          git push origin main
+          # Debugging step: Show the commit log
+          echo "Commit log after commit:"
+          git log -n 1  # Show the latest commit
+
+          # Push the changes to the gh-pages branch
+          git push origin gh-pages
 
       - name: Clean up (optional)
         run: |
