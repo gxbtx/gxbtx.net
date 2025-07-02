@@ -1,6 +1,12 @@
 name: Generate Galleries
 
 on:
+  # makes sure that everything else is done first
+  workflow_run:
+    workflows: ["Timeline"]
+    branches: [main]
+    types: 
+      - completed
   push:
     branches:
       - main
@@ -9,7 +15,7 @@ on:
 jobs:
   generate-galleries:
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
