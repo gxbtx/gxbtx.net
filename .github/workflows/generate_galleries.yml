@@ -1,0 +1,131 @@
+name: Generate Galleries
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-galleries:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies (e.g., Python, etc.)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3
+
+      - name: Generate gallery pages and update galleries.html
+        run: |
+          # Navigate to the root of your project
+          cd $GITHUB_WORKSPACE
+
+          # Prepare folder variables
+          PHOTOS_DIR="./photos"
+          GALLERIES_DIR="./galleries"
+          GALLERIES_HTML="./galleries.html"
+
+          # Ensure galleries folder exists and clean up old HTML files
+          echo "Cleaning up old gallery HTML files..."
+          rm -f $GALLERIES_DIR/*.html
+          
+          # Ensure galleries folder exists
+          mkdir -p $GALLERIES_DIR
+
+          # Start the galleries.html content
+          echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | Galleries</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'><div id='header'></div><div class='main'><div class='gallery'>" > $GALLERIES_HTML
+
+          # Loop through each folder in the photos directory
+          for gallery in $PHOTOS_DIR/*; do
+            if [ -d "$gallery" ]; then
+              # Get the gallery name (folder name), replace spaces with underscores, and make it lowercase for the link
+              gallery_name=$(basename "$gallery")
+              gallery_name_link=$(echo "$gallery_name" | tr '[:space:]' '_')  # Replace spaces with underscores for the link
+
+              # Find all unique image files in the gallery folder (no duplicates)
+              images=$(find "$gallery" -type f -name "*.jpg" -o -name "*.png" | sort | uniq)
+
+              # Check for a .txt file in the gallery folder
+              txt_file=$(find "$gallery" -type f -name "*.txt" | head -n 1)
+
+              # Generate HTML for the new gallery page
+              gallery_html="$GALLERIES_DIR/$gallery_name_link.html"
+              
+              # Start the gallery page HTML structure
+              echo "<!DOCTYPE html><html><head><meta charset='utf-8' /><meta http-equiv='X-UA-Compatible' content='IE=edge' /><title>GXBTX | $gallery_name</title><meta name='description' content='' /><meta name='viewport' content='width=device-width, initial-scale=1' /><link rel='stylesheet' href='/style.css' /></head><body id='top'>" > "${gallery_html}"
+
+              # Add header element explicitly
+              echo "<div id='header'></div>" >> "${gallery_html}"
+
+              # Add the gallery description from the .txt file if it exists (outside of gallery div, but inside main div)
+              echo "<div class='main'>" >> "${gallery_html}"
+              if [ -f "$txt_file" ]; then
+                # Add the content of the .txt file as a paragraph
+                echo "<p class='gallery-description'>" >> "${gallery_html}"
+                cat "$txt_file" >> "${gallery_html}"
+                echo "</p>" >> "${gallery_html}"
+              fi
+
+              # Start the gallery images section
+              echo "<div class='gallery'>" >> "${gallery_html}"
+
+              # Loop through unique image files only
+              for image in $images; do
+                image_filename=$(basename "$image")
+                
+                # Add the image without changing its filename (no space-to-underscore conversion here)
+                echo "<img alt='$gallery_name' src='/photos/$gallery_name/$image_filename'>" >> "${gallery_html}"
+              done
+
+              # Close the gallery section
+              echo "</div>" >> "${gallery_html}"
+
+              # Add footer element explicitly
+              echo "<a href='#top'>Back to Top</a></div>" >> "${gallery_html}"
+              echo "<div id='footer'></div>" >> "${gallery_html}"
+
+              # Add the script tag at the bottom
+              echo "<script src='/scripts/make_header_footer.js' async defer></script></body></html>" >> "${gallery_html}"
+
+              # Add the gallery to galleries.html (replace spaces with underscores in the link)
+              echo "<a href='/galleries/$gallery_name_link.html'>" > temp_gallery
+              echo "<div class='container'>" >> temp_gallery
+              echo "<img alt='$gallery_name' src='/photos/$gallery_name/$(basename "$images" | head -n 1)'>" >> temp_gallery
+              echo "<div class='centered'>$gallery_name</div>" >> temp_gallery
+              echo "</div></a>" >> temp_gallery
+              cat temp_gallery >> $GALLERIES_HTML
+            fi
+          done
+
+          # Close galleries.html
+          echo "</div></div><div id='footer'></div><script src='/scripts/make_header_footer.js' async defer></script></body></html>" >> $GALLERIES_HTML
+
+          # Clean up
+          rm temp_gallery
+          
+      - name: Commit and push changes
+        run: |
+          # Configure Git user for the commit
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # Checkout the main branch (if not on it already)
+          git checkout main
+
+          # Make sure the repository is up to date with remote
+          git pull origin main
+
+          # Add all changes (including new gallery HTML files)
+          git add .
+
+          # Commit only if there are changes
+          git diff-index --quiet HEAD || git commit -m "Auto-generated gallery pages"
+
+          # Push the changes back to the main branch
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

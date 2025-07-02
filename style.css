@@ -1,0 +1,170 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lexend:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+/* Removing this will mess with element sizing for the whole site*/
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Lexend", sans-serif; /* change the main font of the site here*/
+  color: #fafefa;
+  background-color: #121211;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* General Styling*/
+#header {
+  /* Color and spacing */
+  background-color: #121211;
+  color: #fafefa;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  text-align: center;
+  margin: auto;
+  width: 100%;
+  align-items: center;
+  img{height:auto; width:20%; vertical-align: top;}
+}
+
+/* This is only spacing for the navigation links, don't edit unless you want to change that*/
+#navLinks {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* to change the style of the navigation links, edit this:*/
+#navLinks a {
+  color: #e0dedd;
+  text-decoration: none;
+  /* transition makes it so the link doesn't instantly change on hover. you can remove
+  this or play with the timing. This is especially useful if you're changing the size or
+  saturation of elements */
+  transition: all 0.2s ease-out;
+}
+
+#navLinks a:hover {
+  color: #ff2121;
+  text-decoration: none;
+  /* You can also do other things here, like make it bigger if you want:*/
+  transform: scale(120%);
+}
+
+.main {
+  padding: 0em 2em 1em 2em;
+  margin: 0 auto; /* centers the main content */
+  background-color: #121211;
+}
+
+hr {
+  margin: 2em 0;
+}
+
+#footer {
+  text-align: center;
+  padding: 15px;
+  background-color: #121211;
+}
+
+a:link {
+  color: #3d3dff;
+  background-color: transparent;
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+a:visited {
+  color: #7070ff;
+  background-color: transparent;
+  text-decoration: underline;
+  font-weight: normal;
+}
+
+a:hover {
+  color: #ff2121;
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:active {
+  color: red;
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+/* Page specific */
+.textPage {
+  max-width: 800px; /*You can remove or not use this, I just think it looks better on bigger windows */
+}
+
+/* Touching any CSS below this can break the gallery. Proceed with caution */
+.gallery {
+  padding-top: 1em;
+  /* base number of columns, can make this 1 to ?? at bigger numbers it'll look funny 
+     if you edit this, you may want to update the columns in the mobile sizing starting on line 105
+  */
+  columns: auto 3;
+  text-align: center;
+}
+
+.gallery img {
+  border: 1px solid black; /* You can remove the border if you want */
+  width: 100%;
+}
+
+figure {
+  display: inline-block;
+  margin: 0;
+  margin-bottom: 15px;
+}
+
+.spotlightImage {
+  display: block;
+  margin: 0 auto;
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+  text-shadow:
+   -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Below changes the number of columns in the gallery for smaller screens
+   If you changed the column number on line 85, you might have to edit it here too
+   (it's not exactly mobile and tablet sizing)
+    */
+@media only screen and (max-width: 800px) {
+  .gallery {
+    columns: auto 2;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .gallery {
+    columns: auto 1;
+  }
+}
