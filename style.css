@@ -76,6 +76,30 @@ hr {
   background-color: #121211;
 }
 
+a:link {
+  color: #fafefa;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #e0dedd;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ff2121;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
 /* Page specific */
 .textPage {
   max-width: 800px; /*You can remove or not use this, I just think it looks better on bigger windows */
